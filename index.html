@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8" />
+<head>
+</head>
+
+<body>
+<a href="javascript:;" class="btn_random_start">随机数按钮</a>
+<a href="javascript:;" class="btn_random_stop">随机数按钮_停止</a>
+<p>随机数是：<span class="random_final_num" style="font-size: 16px; color:red; ">0</span></p>
+<p><span class="random_final_title" style="font-size: 16px; color:red; "></span></p>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.js"></script>
+<script type="text/javascript">
+var allNum = 59,
+    timer = null,
+    i = 1,
+    val = 0,
+    storage = window.localStorage,
+    arr = [],
+    arr_select = [],
+    $obj = $('.random_final_num'),
+    $obj_title = $('.random_final_title');
+
+function getRandom() {
+    var n = Math.round(Math.random() * allNum + 1); //1-60
+    // 不存在
+    if ($.inArray(n, arr) == -1 && storage.getItem('val') != n) {
+        storage.setItem('val', n);
+        arr.push(n);
+        console.log(n);
+        return n;
+    } else { //存在
+        getRandom();
+    }
+};
+
+function restartState() {
+    i = 1;
+    arr = [];
+    storage.removeItem('val');
+    $obj.html('0');
+    $obj_title.html('');
+
+    getRandom();
+};
+
+//转字符串
+function writeResult(arr){
+    return arr.join(',');
+};
+
+//转数组
+function revert2arr(str){
+    return str.split(',');
+};
+
+// 开始
+$('.btn_random_start').on('click', function() {
+    timer && clearInterval(timer);
+    timer = setInterval(function() {
+        if (i <= allNum) {
+            i++;
+            val = getRandom();
+            $obj.html(val);
+        } else {
+            writeResult();
+            if (confirm('是否从新循环抽取？')) {
+                restartState();
+            } else {
+                timer && clearInterval(timer);
+                return
+            }
+        };
+    }, 100);
+});
+
+// 停止
+$('.btn_random_stop').on('click', function() {
+    timer && clearInterval(timer);
+    $obj.html(storage.getItem('val') || '请先按开始');
+    storage.getItem('val') && $obj_title.html('随机结束!是否有重复数字：' + isArrReapt(arr));
+});
+//$('.btn_random_start').trigger('click');
+
+function isArrReapt(arr) {
+    var obj = {};
+    for (var i = 0; i < arr.length; i++) {
+        if (!obj[arr[i]]) {
+            obj[arr[i]] = 1;
+        } else {
+            return true
+        }
+    };
+    return false
+};
+</script>
+</body>
+
+</html>
