@@ -1,0 +1,33 @@
+<html ng-app="app">
+
+<head>
+    <title>ng-repeat orderBy排序demo</title>
+    <script src="http://apps.bdimg.com/libs/angular.js/1.2.16/angular.min.js"></script>
+</head>
+
+<body>
+    <div ng-controller='ctl'>
+        <<ul>
+            <li ng-repeat="person in persons">
+                <span ng-switch on="person.sex">
+                    <span ng-switch-when="1">you are a boy</span>
+                    <span ng-switch-when="2">you are a girl</span>
+                </span>
+                <span ng-if="person.sex==1">you may be a father</span>
+                <span ng-if="person.sex==2">you may be a mother</span>
+                
+                <span>
+                    please input your baby's name:
+                    <input type="text" name="inputText" require ng-trim="true" ng-model="userNum" ng-pattern="/^[0-9]*[1-9][0-9]*$/" ng-maxlength="6" maxlength="6">
+                </span>
+            </li>
+        </ul>
+    </div>
+    <script>
+    angular.module('app', []).controller('ctl', function($scope) {
+      $scope.persons = [{'sex':1},{'sex':2}]
+    })
+    </script>
+</body>
+
+</html>
